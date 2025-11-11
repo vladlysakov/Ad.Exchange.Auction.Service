@@ -1,0 +1,58 @@
+version: '3'
+
+tasks:
+  install:
+    desc: Install dependencies using uv
+    cmds:
+      - uv pip install -e ".[dev]"
+
+  run:
+    desc: Run the application
+    cmds:
+      - uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - alembic upgrade head
+
+  seed:
+    desc: Seed initial data
+    cmds:
+      - python seed.py
+
+  test:
+    desc: Run tests
+    cmds:
+      - pytest -v
+
+  docker-up:
+    desc: Start all services with docker-compose
+    cmds:
+      - docker compose up -d
+
+  docker-down:
+    desc: Stop docker services
+    cmds:
+      - docker compose down
+
+  docker-logs:
+    desc: View docker logs
+    cmds:
+      - docker compose logs -f api
+
+  docker-build:
+    desc: Build docker image
+    cmds:
+      - docker compose build
+
+  docker-restart:
+    desc: Restart API service
+    cmds:
+      - docker compose restart api
+
+  clean:
+    desc: Clean cache and temporary files
+    cmds:
+      - find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+      - find . -type f -name "*.pyc" -delete
